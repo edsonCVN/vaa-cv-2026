@@ -13,7 +13,7 @@ const AFIRMACOES = [
     "1. O Estado deve vender a maioria das empresas públicas para reduzir a dívida e aumentar a eficiência, focando-se na regulação e não na gestão.",
     "2. O investimento público em saúde e educação deve ser a prioridade máxima do Orçamento Geral do Estado, mesmo que isso signifique aumentar a dívida.",
     "3. É urgente aprofundar a descentralização do poder, dando mais autonomia política e financeira às Câmaras Municipais e Ilhas.",
-    "4. Deve-se criar um "Estatuto Especial da Diáspora" com benefícios fiscais e políticos, facilitando o regresso e investimento dos emigrantes.",
+    "4. Deve-se criar um \"Estatuto Especial da Diáspora\" com benefícios fiscais e políticos, facilitando o regresso e investimento dos emigrantes.",
     "5. O crescimento económico (por exemplo, no turismo e construção) deve ter prioridade sobre medidas ambientais restritivas que possam travar o investimento.",
     "6. O Estado deve regular fortemente os preços de bens essenciais e os setores estratégicos para proteger os consumidores de monopólios e da inflação.",
     "7. É fundamental endurecer as leis de combate à corrupção e ao enriquecimento ilícito, garantindo a total transparência na gestão pública.",
