@@ -125,11 +125,10 @@ function guardarRespostaOp(name, value) {
     setRespostas(respostas);
 }
 
-function gerarHTMLPonderacao() {
+function gerarHTMLPonderacaoCampos() {
     /**
      * Gera o HTML para a secção de ponderação final (opcional), carregando a resposta guardada.
      */
-    const formularioPonderacao = document.getElementById('formulario-ponderacao');
     const respostasAtuais = getRespostas().ponderacoes; // Carrega as ponderações guardadas
     let htmlContent = '';
 
@@ -165,7 +164,7 @@ function gerarHTMLPonderacao() {
         `;
     });
     
-    formularioPonderacao.innerHTML = htmlContent; // Atualiza o formulário de ponderação
+    return htmlContent; // Retorna apenas o HTML dos campos
 }
 
 // **NOVA FUNÇÃO:** Guarda a ponderação no Session Storage em tempo real
@@ -210,14 +209,30 @@ function atualizarInterface() {
         }
     } else if (perguntaAtual === AFIRMACOES.length) {
         // Exibir Ponderação (Este é o passo após as 10 afirmações)
+        
+        // **NOVO: Exibir Explicação da Ponderação**
         formPonderacao.style.display = 'block';
         
-        // **IMPORTANTE:** Chamamos a função para gerar o HTML aqui,
-        // garantindo que os campos de ponderação opcional são criados.
-        gerarHTMLPonderacao(); 
+        // 1. Mostrar o Título e a Explicação
+        formPonderacao.innerHTML = `
+            <h2>⭐ Passo 2: Avalie a Importância dos Temas</h2>
+            <div class="explicacao-ponderacao">
+                <p><strong>Porquê esta secção?</strong></p>
+                <p>Nesta fase, atribui um **peso** a cada tema, de 0 (Não Importa) a 3 (Muito Importante).
+                O seu alinhamento com um partido será muito mais afetado pelas respostas que marcou
+                como "Importância 3" do que pelas marcadas como "Não Importa".</p>
+                <p>Se deixar a opção em branco, será atribuída a importância **Padrão (1)**.</p>
+                <p class="aviso">Escolha a sua importância e clique em "Calcular Alinhamento".</p>
+            </div>
+            <div id="campos-ponderacao">
+                </div>
+        `;
+
+        // 2. Gerar os Campos de Ponderação abaixo da explicação
+        document.getElementById('campos-ponderacao').innerHTML = gerarHTMLPonderacaoCampos();
         
         btnVoltar.style.display = 'inline-block';
-        btnCalcular.style.display = 'inline-block'; // Agora o botão CALCULAR aparece!
+        btnCalcular.style.display = 'inline-block'; 
         
     } else if (perguntaAtual === AFIRMACOES.length + 1) {
         // Exibir Resultados (Pergunta 11)
