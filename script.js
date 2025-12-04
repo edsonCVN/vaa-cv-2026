@@ -43,7 +43,7 @@ const DADOS_PARTIDOS = {
         logo_url: "assets/logos/PAICV.png"
     },
     "MPD": {
-        posicoes: [- [2, 1, 1, 0, 2, -2, 1, 1, -2, -1],
+        posicoes: [-2, 1, 1, 0, 2, -2, 1, 1, -2, -1],
         logo_url: "assets/logos/MpD.png"
     },
     "UCID": {
