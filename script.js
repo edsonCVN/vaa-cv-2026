@@ -43,16 +43,40 @@ const POSICOES_PARTIDOS = {
     "UCID": [0, 2, 1, 2, -1, 1, 0, 0, 0, -1]
 };
 
+// =================================================================
+// NOVO: Funções de Gestão de Sessão (sessionStorage)
+// =================================================================
+
+const SESSION_KEY = 'vaa_respostas_cv';
+const RESPOSTA_PADRAO = {
+    opinioes: Array(AFIRMACOES.length).fill(null), // 10 posições iniciais com null
+    ponderacoes: Array(AFIRMACOES.length).fill(null)
+};
+
+function getRespostas() {
+    /** Recupera as respostas do sessionStorage ou devolve o objeto padrão. */
+    const dados = sessionStorage.getItem(SESSION_KEY);
+    return dados ? JSON.parse(dados) : RESPOSTA_PADRAO;
+}
+
+function setRespostas(dados) {
+    /** Guarda o objeto de respostas atualizado no sessionStorage. */
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(dados));
+}
+
 // -----------------------------------------------------------------
 // 2. Funções de Exibição e Navegação
 // -----------------------------------------------------------------
 
 function gerarHTMLPergunta(index) {
     /**
-     * Gera o HTML para uma única afirmação.
+     * Gera o HTML para uma única afirmação, carregando a resposta guardada.
      */
     if (index >= AFIRMACOES.length) return '';
-
+    
+    const respostasAtuais = getRespostas().opinioes; // Carrega as respostas guardadas
+    const valorGuardado = respostasAtuais[index];   // Valor guardado para esta pergunta
+    
     const afirmacao = AFIRMACOES[index];
     const afirmacaoId = `afirmacao-${index}`;
     let htmlContent = '';
@@ -67,11 +91,11 @@ function gerarHTMLPergunta(index) {
     OPCOES_RESPOSTA.forEach(opcao => {
         const radioId = `${afirmacaoId}-op-${opcao.valor}`;
         
-        // Verifica se esta opção já foi marcada (para quando o utilizador volta)
-        const checked = document.querySelector(`input[name="${afirmacaoId}"][value="${opcao.valor}"]:checked`);
+        // Novo: Verifica se o valor da opção corresponde ao valor guardado
+        const checked = (opcao.valor === valorGuardado);
         
         htmlContent += `
-            <input type="radio" id="${radioId}" name="${afirmacaoId}" value="${opcao.valor}" required ${checked ? 'checked' : ''}>
+            <input type="radio" id="${radioId}" name="${afirmacaoId}" value="${opcao.valor}" required ${checked ? 'checked' : ''} onchange="guardarRespostaOp(this.name, this.value)">
             <label for="${radioId}">${opcao.nome}</label>
         `;
     });
@@ -84,15 +108,25 @@ function gerarHTMLPergunta(index) {
     return htmlContent;
 }
 
+// **NOVA FUNÇÃO:** Guarda a opinião no Session Storage em tempo real
+function guardarRespostaOp(name, value) {
+    const index = parseInt(name.split('-')[1], 10);
+    const respostas = getRespostas();
+    respostas.opinioes[index] = parseInt(value, 10);
+    setRespostas(respostas);
+}
+
 function gerarHTMLPonderacao() {
     /**
-     * Gera o HTML para a secção de ponderação final (agora OPCIONAL).
+     * Gera o HTML para a secção de ponderação final (opcional), carregando a resposta guardada.
      */
     const formularioPonderacao = document.getElementById('formulario-ponderacao');
+    const respostasAtuais = getRespostas().ponderacoes; // Carrega as ponderações guardadas
     let htmlContent = '';
 
     AFIRMACOES.forEach((afirmacao, index) => {
         const ponderacaoId = `ponderacao-${index}`; 
+        const valorGuardado = respostasAtuais[index];
 
         htmlContent += `
             <div class="afirmacao">
@@ -105,12 +139,12 @@ function gerarHTMLPonderacao() {
         OPCOES_PONDERACAO.forEach(opcao => {
             const radioId = `${ponderacaoId}-po-${opcao.valor}`;
             
-            // Preserva a seleção anterior, se existir
-            const checked = document.querySelector(`input[name="${ponderacaoId}"][value="${opcao.valor}"]:checked`);
+            // Novo: Verifica se o valor da opção corresponde ao valor guardado
+            const checked = (opcao.valor === valorGuardado);
             
-            // ATENÇÃO: 'required' foi removido para permitir que seja opcional.
+            // ATENÇÃO: 'required' foi removido para ser opcional.
             htmlContent += `
-                <input type="radio" id="${radioId}" name="${ponderacaoId}" value="${opcao.valor}" ${checked ? 'checked' : ''}>
+                <input type="radio" id="${radioId}" name="${ponderacaoId}" value="${opcao.valor}" ${checked ? 'checked' : ''} onchange="guardarRespostaPo(this.name, this.value)">
                 <label for="${radioId}">${opcao.nome}</label>
             `;
         });
@@ -123,6 +157,15 @@ function gerarHTMLPonderacao() {
     });
     
     formularioPonderacao.innerHTML = htmlContent; // Atualiza o formulário de ponderação
+}
+
+// **NOVA FUNÇÃO:** Guarda a ponderação no Session Storage em tempo real
+function guardarRespostaPo(name, value) {
+    const index = parseInt(name.split('-')[1], 10);
+    const respostas = getRespostas();
+    // NOTA: A ponderação pode ser 0, por isso usamos null para o valor não respondido
+    respostas.ponderacoes[index] = parseInt(value, 10); 
+    setRespostas(respostas);
 }
 
 
@@ -199,26 +242,22 @@ function validarPerguntaAtual(formId) {
 }
 
 function avancarPergunta() {
-    const formAtualId = (perguntaAtual < AFIRMACOES.length) ? 'formulario-vaa' : 'formulario-ponderacao';
-
-    // 1. Validação
-    // A validação para a VAA só precisa de verificar um grupo de rádio por vez.
-    const afirmacaoName = `afirmacao-${perguntaAtual}`;
-    const radioSelecionado = document.querySelector(`input[name="${afirmacaoName}"]:checked`);
-
-    if (perguntaAtual < AFIRMACOES.length && !radioSelecionado) {
-        alert(`Por favor, responda à afirmação ${perguntaAtual + 1} para continuar.`); // Mensagem de erro
+    // 1. Validação: Apenas verifica se a pergunta atual tem uma resposta guardada
+    const respostasAtuais = getRespostas().opinioes;
+    
+    if (perguntaAtual < AFIRMACOES.length && respostasAtuais[perguntaAtual] === null) {
+        alert(`Por favor, responda à afirmação ${perguntaAtual + 1} para continuar.`);
         return; 
     }
     
     // 2. Avanço de Estado
     if (perguntaAtual < AFIRMACOES.length) {
-        perguntaAtual++; // Avança para a próxima afirmação ou para a ponderação
+        perguntaAtual++; 
     }
-    // Não avança se estiver na ponderação, o botão 'Avançar' desaparece, dando lugar ao 'Calcular'.
 
     // 3. Atualizar Interface
     atualizarInterface();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function voltarPergunta() {
@@ -259,52 +298,33 @@ const calcularAlinhamentoPonderado = (respostas, posicoes, ponderacoes) => {
 
 function calcularResultados() {
     /**
-     * Recolhe as respostas e ponderações, sendo as ponderações OPCIONAIS.
-     * Se a ponderação for omitida, utiliza o peso Padrão (1).
+     * Recolhe as respostas e ponderações diretamente do sessionStorage para o cálculo.
      */
     
-    // 1. Validação de Opinião: Garantir que todas as 10 perguntas de Opinião foram respondidas
+    // 1. Recolher todos os dados do Session Storage
+    const { opinioes, ponderacoes } = getRespostas();
+
+    const respostasEleitor = [];
+    const ponderacoesEleitor = [];
+
+    // 2. Validação FINAL e preenchimento dos pesos (Importância)
     for (let i = 0; i < AFIRMACOES.length; i++) {
-        const afirmacaoName = `afirmacao-${i}`;
-        const radioOp = document.querySelector(`input[name="${afirmacaoName}"]:checked`);
-        
-        if (!radioOp) {
+        // Validação de Opinião (Obrigatório)
+        if (opinioes[i] === null) {
             alert(`Erro: Por favor, responda à afirmação ${i + 1} para calcular o alinhamento.`);
-            // Volta para a pergunta não respondida
             perguntaAtual = i; 
             atualizarInterface();
             return; // Interrompe o cálculo
         }
-    }
-    
-    // 2. Recolher todos os dados
-    const respostasEleitor = [];
-    const ponderacoesEleitor = [];
+        respostasEleitor.push(opinioes[i]);
 
-    // Recolha de Respostas (Opinião) - DEVE haver 10 respostas
-    for (let i = 0; i < AFIRMACOES.length; i++) {
-        const radioOp = document.querySelector(`input[name="afirmacao-${i}"]:checked`);
-        respostasEleitor.push(parseInt(radioOp.value, 10));
-    }
-
-    // Recolha de Ponderações (Importância) - OPCIONAL
-    for (let i = 0; i < AFIRMACOES.length; i++) {
-        const radioPo = document.querySelector(`input[name="ponderacao-${i}"]:checked`);
-        
-        if (radioPo) {
-            // Se o utilizador marcou, usa o valor que marcou (0 a 3)
-            ponderacoesEleitor.push(parseInt(radioPo.value, 10));
-        } else {
-            // Se o utilizador saltou, usamos o peso Padrão (Importância 1)
-            // Isto garante que o tópico é contabilizado, mas não com o peso máximo.
-            ponderacoesEleitor.push(1); 
-        }
+        // Ponderação (Opcional): Usa 1 se for null
+        ponderacoesEleitor.push(ponderacoes[i] === null ? 1 : ponderacoes[i]);
     }
     
     // 3. Calcular o alinhamento para cada partido
     const resultados = {};
     for (const partido in POSICOES_PARTIDOS) {
-        // Chamamos a função de cálculo ponderado existente
         const percentagem = calcularAlinhamentoPonderado(respostasEleitor, POSICOES_PARTIDOS[partido], ponderacoesEleitor);
         resultados[partido] = (percentagem === 'N/A') ? 0 : parseFloat(percentagem);
     }
@@ -316,7 +336,6 @@ function calcularResultados() {
     listaResultadosDiv.innerHTML = ''; 
     
     resultadosOrdenados.forEach(([partido, percentagem]) => {
-        // Exibir N/A se a ponderação total for zero, mas apenas se houver outros resultados.
         const valorPercentagem = (percentagem === 0 && resultadosOrdenados.length > 1) ? 'N/A' : `${percentagem}%`;
         
         const barraHTML = `
@@ -330,7 +349,6 @@ function calcularResultados() {
         listaResultadosDiv.innerHTML += barraHTML;
     });
 
-    // 5. Mudar o estado para Resultados
     perguntaAtual = AFIRMACOES.length + 1;
     atualizarInterface();
 }
@@ -348,4 +366,10 @@ function resetFormulario() {
 }
 
 // Início da aplicação
-window.onload = atualizarInterface;
+window.onload = () => {
+    // Inicializa o session storage se não existir
+    if (!sessionStorage.getItem(SESSION_KEY)) {
+        setRespostas(RESPOSTA_PADRAO);
+    }
+    atualizarInterface();
+};
