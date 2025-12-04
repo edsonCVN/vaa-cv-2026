@@ -157,12 +157,15 @@ function atualizarInterface() {
             btnVoltar.style.display = 'inline-block';
         }
     } else if (perguntaAtual === AFIRMACOES.length) {
-        // Exibir Ponderação (Pergunta 10)
+        // Exibir Ponderação (Este é o passo após as 10 afirmações)
         formPonderacao.style.display = 'block';
-        formPonderacao.innerHTML = gerarHTMLPonderacao();
+        
+        // **IMPORTANTE:** Chamamos a função para gerar o HTML aqui,
+        // garantindo que os campos de ponderação opcional são criados.
+        gerarHTMLPonderacao(); 
         
         btnVoltar.style.display = 'inline-block';
-        btnCalcular.style.display = 'inline-block';
+        btnCalcular.style.display = 'inline-block'; // Agora o botão CALCULAR aparece!
         
     } else if (perguntaAtual === AFIRMACOES.length + 1) {
         // Exibir Resultados (Pergunta 11)
@@ -204,7 +207,7 @@ function avancarPergunta() {
     const radioSelecionado = document.querySelector(`input[name="${afirmacaoName}"]:checked`);
 
     if (perguntaAtual < AFIRMACOES.length && !radioSelecionado) {
-        alert(`Por favor, responda à afirmação ${perguntaAtual + 1} para continuar.`);
+        alert(`Por favor, responda à afirmação ${perguntaAtual + 1} para continuar.`); // Mensagem de erro
         return; 
     }
     
@@ -270,7 +273,7 @@ function calcularResultados() {
             // Volta para a pergunta não respondida
             perguntaAtual = i; 
             atualizarInterface();
-            return;
+            return; // Interrompe o cálculo
         }
     }
     
