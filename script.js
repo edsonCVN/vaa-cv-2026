@@ -37,10 +37,19 @@ const OPCOES_PONDERACAO = [
     { nome: "Muito Importante (3)", valor: 3 }
 ];
 
-const POSICOES_PARTIDOS = {
-    "PAICV": [-2, 2, 0, 1, -1, 2, 1, 2, 2, 2],
-    "MPD": [2, 1, 1, 0, 2, -2, 1, 1, -2, -1],
-    "UCID": [1, 1, 2, 2, 1, -1, 2, 1, -1, -1]
+const DADOS_PARTIDOS = {
+    "PAICV": {
+        posicoes: [-2, 2, 0, 1, -1, 2, 1, 2, 2, 2],
+        logo_url: "assets/logos/PAICV.png"
+    },
+    "MPD": {
+        posicoes: [- [2, 1, 1, 0, 2, -2, 1, 1, -2, -1],
+        logo_url: "assets/logos/MpD.png"
+    },
+    "UCID": {
+        posicoes: [-[1, 1, 2, 2, 1, -1, 2, 1, -1, -1]
+        logo_url: "assets/logos/UCID.png"
+    }
 };
 
 // =================================================================
@@ -324,23 +333,39 @@ function calcularResultados() {
     
     // 3. Calcular o alinhamento para cada partido
     const resultados = {};
-    for (const partido in POSICOES_PARTIDOS) {
-        const percentagem = calcularAlinhamentoPonderado(respostasEleitor, POSICOES_PARTIDOS[partido], ponderacoesEleitor);
-        resultados[partido] = (percentagem === 'N/A') ? 0 : parseFloat(percentagem);
+    for (const nomePartido in DADOS_PARTIDOS) {
+        const dados = DADOS_PARTIDOS[nomePartido];
+        
+        // 1. Cálculo
+        const percentagem = calcularAlinhamentoPonderado(respostasEleitor, dados.posicoes, ponderacoesEleitor);
+        const percentagemNumerica = (percentagem === 'N/A') ? 0 : parseFloat(percentagem);
+
+        // 2. Guardar o resultado (incluindo o URL do logo)
+        resultados[nomePartido] = {
+            percentagem: percentagemNumerica,
+            logo: dados.logo_url
+        };
     }
-    
-    // 4. Ordenar e Exibir os resultados (o código de exibição permanece inalterado)
-    const resultadosOrdenados = Object.entries(resultados).sort(([, a], [, b]) => b - a);
+
+    // 4. Ordenar os resultados (mudança na ordenação para acomodar o objeto)
+    const resultadosOrdenados = Object.entries(resultados).sort(([, a], [, b]) => b.percentagem - a.percentagem);
     
     const listaResultadosDiv = document.getElementById('lista-resultados');
     listaResultadosDiv.innerHTML = ''; 
     
-    resultadosOrdenados.forEach(([partido, percentagem]) => {
+    resultadosOrdenados.forEach(([nomePartido, dadosResultado]) => {
+        const percentagem = dadosResultado.percentagem;
+        const logoUrl = dadosResultado.logo;
+
+        // Exibir N/A se a ponderação total for zero
         const valorPercentagem = (percentagem === 0 && resultadosOrdenados.length > 1) ? 'N/A' : `${percentagem}%`;
         
         const barraHTML = `
             <div class="partido-resultado">
-                **${partido}**
+                <div class="header-resultado">
+                    <img src="${logoUrl}" alt="Logo do partido ${nomePartido}" class="logo-partido">
+                    **${nomePartido}**
+                </div>
                 <div class="grafico-barra">
                     <div class="barra-preenchida" style="width: ${percentagem}%;">${valorPercentagem}</div>
                 </div>
