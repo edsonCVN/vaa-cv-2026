@@ -225,7 +225,7 @@ function atualizarInterface() {
                 <p><strong>Porquê esta secção?</strong></p>
                 <p>Nesta fase, atribui uma importância a cada tema, de "Baixa", "Média" ou "Alta".
                 O seu alinhamento com um partido será muito mais afetado pelas respostas que marcou
-                como "Alto" do que pelas marcadas como "Não Importa".</p>
+                como "Alta" do que pelas marcadas como "Baixaa".</p>
                 <p>Se deixar a opção em branco, será atribuída a importância "Média".</p>
                 <p class="aviso">Escolha a sua importância e clique em "Calcular Alinhamento".</p>
             </div>
