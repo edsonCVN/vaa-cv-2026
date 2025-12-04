@@ -10,16 +10,16 @@ let perguntaAtual = 0; // 0 a 9 para as afirmações, 10 para a ponderação, 11
 // -----------------------------------------------------------------
 
 const AFIRMACOES = [
-    "1. A educação deve ser totalmente gratuita em todos os níveis, incluindo o universitário.",
-    "2. O Governo deve aumentar os impostos sobre o turismo de luxo para financiar a saúde.",
-    "3. A transição energética para 100% de energias renováveis deve ser prioridade máxima, mesmo que isso aumente o custo da eletricidade a curto prazo.",
-    "4. É necessário criar um imposto sobre a propriedade para combater a especulação imobiliária.",
-    "5. As políticas de repatriamento da diáspora devem ser intensificadas com benefícios fiscais.",
-    "6. A descentralização administrativa deve ser acelerada, dando mais poder aos municípios.",
-    "7. O investimento público em infraestruturas marítimas e portuárias deve ser duplicado.",
-    "8. A idade de reforma deve ser aumentada gradualmente para garantir a sustentabilidade da segurança social.",
-    "9. Medidas mais rígidas de controlo de imigração são necessárias para proteger o mercado de trabalho local.",
-    "10. O uso de tecnologias digitais na administração pública deve ser obrigatório e universal até 2026."
+    "1. O Estado deve vender a maioria das empresas públicas para reduzir a dívida e aumentar a eficiência, focando-se na regulação e não na gestão.",
+    "2. O investimento público em saúde e educação deve ser a prioridade máxima do Orçamento Geral do Estado, mesmo que isso signifique aumentar a dívida.",
+    "3. É urgente aprofundar a descentralização do poder, dando mais autonomia política e financeira às Câmaras Municipais e Ilhas.",
+    "4. Deve-se criar um "Estatuto Especial da Diáspora" com benefícios fiscais e políticos, facilitando o regresso e investimento dos emigrantes.",
+    "5. O crescimento económico (por exemplo, no turismo e construção) deve ter prioridade sobre medidas ambientais restritivas que possam travar o investimento.",
+    "6. O Estado deve regular fortemente os preços de bens essenciais e os setores estratégicos para proteger os consumidores de monopólios e da inflação.",
+    "7. É fundamental endurecer as leis de combate à corrupção e ao enriquecimento ilícito, garantindo a total transparência na gestão pública.",
+    "8. O Governo deve criar incentivos fiscais massivos para empresas que contratem jovens recém-formados e subsidiar programas de primeiro emprego.",
+    "9. O Governo deve assumir o controlo ou subsidiar fortemente os transportes marítimos e aéreos inter-ilhas, garantindo tarifas acessíveis e serviço público, mesmo que isso represente um custo elevado para o Estado.",
+    "10. O salário mínimo nacional e as prestações sociais devem ser aumentados significativamente, mesmo que isso represente um custo para as empresas e para o Estado."
 ];
 
 const OPCOES_RESPOSTA = [
@@ -38,9 +38,9 @@ const OPCOES_PONDERACAO = [
 ];
 
 const POSICOES_PARTIDOS = {
-    "PAICV": [2, 1, 2, 1, 0, 2, 1, -1, -2, 1],
-    "MPD": [-1, 0, 0, -1, 1, 0, 2, 1, 1, 2],
-    "UCID": [0, 2, 1, 2, -1, 1, 0, 0, 0, -1]
+    "PAICV": [-2, 2, 0, 1, -1, 2, 1, 2, 2, 2],
+    "MPD": [2, 1, 1, 0, 2, -2, 1, 1, -2, -1],
+    "UCID": [1, 1, 2, 2, 1, -1, 2, 1, -1, -1]
 };
 
 // =================================================================
