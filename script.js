@@ -31,11 +31,14 @@ const OPCOES_RESPOSTA = [
 ];
 
 const OPCOES_PONDERACAO = [
-    { nome: "Não Importa (0)", valor: 0 },
-    { nome: "Pouco Importante (1)", valor: 1 },
-    { nome: "Importante (2)", valor: 2 },
-    { nome: "Muito Importante (3)", valor: 3 }
+    { nome: "Baixa (-) | Peso 1", valor: 1 },    // Peso Mínimo
+    { nome: "Média (=) | Peso 2", valor: 2 },    // Peso Padrão/Neutro
+    { nome: "Alta (+) | Peso 3", valor: 3 }     // Peso Máximo
 ];
+
+// O peso Padrão (usado quando o utilizador salta a ponderação)
+// será agora 2, para refletir o ponto médio da escala.
+const PESO_PADRAO_OPCIONAL = 2;
 
 const DADOS_PARTIDOS = {
     "PAICV": {
@@ -144,13 +147,15 @@ function gerarHTMLPonderacaoCampos() {
                     <div class="opcoes-ponderacao" id="${ponderacaoId}">
         `;
 
+        // Ponderação que deve ser marcada: a guardada (se existir), ou o peso Padrão (2)
+        const valorAExibir = valorGuardado !== null ? valorGuardado : PESO_PADRAO_OPCIONAL;
+            
         OPCOES_PONDERACAO.forEach(opcao => {
             const radioId = `${ponderacaoId}-po-${opcao.valor}`;
             
-            // Novo: Verifica se o valor da opção corresponde ao valor guardado
-            const checked = (opcao.valor === valorGuardado);
+            // Verifica se o valor da opção corresponde ao valor guardado (ou ao padrão, se não existir)
+            const checked = (opcao.valor === valorAExibir); 
             
-            // ATENÇÃO: 'required' foi removido para ser opcional.
             htmlContent += `
                 <input type="radio" id="${radioId}" name="${ponderacaoId}" value="${opcao.valor}" ${checked ? 'checked' : ''} onchange="guardarRespostaPo(this.name, this.value)">
                 <label for="${radioId}">${opcao.nome}</label>
@@ -343,7 +348,7 @@ function calcularResultados() {
         respostasEleitor.push(opinioes[i]);
 
         // Ponderação (Opcional): Usa 1 se for null
-        ponderacoesEleitor.push(ponderacoes[i] === null ? 1 : ponderacoes[i]);
+        ponderacoesEleitor.push(ponderacoes[i] === null ? PESO_PADRAO_OPCIONAL : ponderacoes[i]);
     }
     
     // 3. Calcular o alinhamento para cada partido
