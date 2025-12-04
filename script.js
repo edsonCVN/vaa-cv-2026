@@ -31,9 +31,9 @@ const OPCOES_RESPOSTA = [
 ];
 
 const OPCOES_PONDERACAO = [
-    { nome: "Baixa (-) | Peso 1", valor: 1 },    // Peso Mínimo
-    { nome: "Média (=) | Peso 2", valor: 2 },    // Peso Padrão/Neutro
-    { nome: "Alta (+) | Peso 3", valor: 3 }     // Peso Máximo
+    { nome: "Baixa (-)", valor: 1 },    // Peso Mínimo
+    { nome: "Média (=)", valor: 2 },    // Peso Padrão/Neutro
+    { nome: "Alta (+)", valor: 3 }     // Peso Máximo
 ];
 
 // O peso Padrão (usado quando o utilizador salta a ponderação)
@@ -223,10 +223,10 @@ function atualizarInterface() {
             <h2>⭐ Passo 2: Avalie a Importância dos Temas</h2>
             <div class="explicacao-ponderacao">
                 <p><strong>Porquê esta secção?</strong></p>
-                <p>Nesta fase, atribui um **peso** a cada tema, de 0 (Não Importa) a 3 (Muito Importante).
+                <p>Nesta fase, atribui uma importância a cada tema, de "Baixa", "Média" ou "Alta".
                 O seu alinhamento com um partido será muito mais afetado pelas respostas que marcou
-                como "Importância 3" do que pelas marcadas como "Não Importa".</p>
-                <p>Se deixar a opção em branco, será atribuída a importância **Padrão (1)**.</p>
+                como "Alto" do que pelas marcadas como "Não Importa".</p>
+                <p>Se deixar a opção em branco, será atribuída a importância "Média".</p>
                 <p class="aviso">Escolha a sua importância e clique em "Calcular Alinhamento".</p>
             </div>
             <div id="campos-ponderacao">
