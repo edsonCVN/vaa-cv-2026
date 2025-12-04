@@ -47,7 +47,7 @@ const DADOS_PARTIDOS = {
         logo_url: "assets/logos/MpD.png"
     },
     "UCID": {
-        posicoes: [-[1, 1, 2, 2, 1, -1, 2, 1, -1, -1]
+        posicoes: [-[1, 1, 2, 2, 1, -1, 2, 1, -1, -1],
         logo_url: "assets/logos/UCID.png"
     }
 };
