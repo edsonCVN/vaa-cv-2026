@@ -151,3 +151,28 @@ h1, h2 {
     color: white;
     border-color: #4CAF50;
 }
+/* =================================================================
+* Estilos para Logotipos
+* ================================================================= */
+
+.header-resultado {
+    display: flex; /* Permite alinhar o logo e o texto horizontalmente */
+    align-items: center; /* Alinha verticalmente o logo e o texto */
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+
+.logo-partido {
+    width: 30px;  /* Tamanho fixo para o logo */
+    height: 30px; 
+    margin-right: 10px; /* Espaço entre o logo e o nome do partido */
+    border-radius: 4px; /* Pequeno arredondamento nas bordas */
+    object-fit: contain; /* Garante que a imagem cabe sem distorção */
+    border: 1px solid #ddd;
+    padding: 2px;
+}
+
+.partido-resultado strong {
+    /* Ajusta a margem do nome do partido se precisar */
+    margin-top: 5px; 
+}
