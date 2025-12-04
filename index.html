@@ -10,18 +10,27 @@
 
 <div class="container">
     <h1>🗳️ VAA Cabo Verde 2026</h1>
-    <p>Descubra o seu alinhamento político respondendo às 10 afirmações. Escolha a opção que melhor reflete a sua opinião.</p>
+    <p>Descubra o seu alinhamento político respondendo às 10 afirmações.</p>
     
-    <form id="formulario-vaa">
-        </form>
-    
-    <div class="botoes-acao">
-        <button class="btn-calcular" onclick="calcularResultados()">Calcular Alinhamento</button>
-        <button class="btn-reset" onclick="resetFormulario()">Recomeçar</button>
+    <div id="quiz-container">
+        <form id="formulario-vaa">
+            </form>
+
+        <form id="formulario-ponderacao" style="display: none;">
+            <h2>⭐ Passo 2: Avalie a Importância</h2>
+            <p>Selecione a importância de cada tema para si. Temas mais importantes terão maior peso no resultado final.</p>
+            </form>
+
+        <div class="botoes-acao">
+            <button id="btn-voltar" class="btn-reset" onclick="voltarPergunta()" style="display: none;">⬅️ Voltar</button>
+            <button id="btn-avancar" class="btn-calcular" onclick="avancarPergunta()">Avançar ➡️</button>
+            <button id="btn-calcular" class="btn-calcular" onclick="calcularResultados()" style="display: none;">Calcular Alinhamento</button>
+            <button id="btn-reset" class="btn-reset" onclick="resetFormulario()">Recomeçar</button>
+        </div>
     </div>
 
     <div id="resultado" style="display: none;">
-        <h2>📊 Os Seus Resultados de Alinhamento</h2>
+        <h2>📊 Os Seus Resultados de Alinhamento Ponderado</h2>
         <div id="lista-resultados">
             </div>
     </div>
